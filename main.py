@@ -3,6 +3,7 @@ from time import sleep
 from secrets import pw
 from secrets import username
 
+
 class InstaBot:
     def __init__(self, username, pw):
         self.driver = webdriver.Chrome()
@@ -34,14 +35,16 @@ class InstaBot:
         self.driver.find_element_by_xpath("//a[contains(@href,'/followers')]")\
             .click()
         followers = self._get_names()
-        not_following_back = [user for user in following if user not in followers]
+        not_following_back = [
+            user for user in following if user not in followers]
         for x in not_following_back:
             profiles = "https://instagram.com/" + x
             print(profiles)
 
     def _get_names(self):
         sleep(2)
-        scroll_box = self.driver.find_element_by_xpath("/html/body/div[5]/div/div/div[2]")
+        scroll_box = self.driver.find_element_by_xpath(
+            "/html/body/div[5]/div/div/div[2]")
         last_ht, ht = 0, 1
         while last_ht != ht:
             last_ht = ht
@@ -56,6 +59,7 @@ class InstaBot:
         self.driver.find_element_by_xpath("/html/body/div[5]/div/div/div[1]/div/div[2]/button")\
             .click()
         return names
+
 
 my_bot = InstaBot(username, pw)
 my_bot.get_unfollowers()
