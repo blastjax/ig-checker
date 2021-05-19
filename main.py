@@ -35,7 +35,9 @@ class InstaBot:
             .click()
         followers = self._get_names()
         not_following_back = [user for user in following if user not in followers]
-        print(not_following_back)
+        for x in not_following_back:
+            profiles = "https://instagram.com/" + x
+            print(profiles)
 
     def _get_names(self):
         sleep(2)
