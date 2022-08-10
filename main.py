@@ -5,7 +5,6 @@ from time import sleep
 from secrets import pw
 from secrets import username
 
-
 class InstaBot:
     def __init__(self, username, pw):
         self.driver = webdriver.Chrome(executable_path='D:/PC/Downloads/chromedriver_win32/chromedriver.exe')
@@ -88,7 +87,6 @@ class InstaBot:
         self.driver.find_element(By.XPATH, "//div[contains(@class,'_ab8w  _ab94 _ab99 _ab9f _ab9m _ab9p  _ab9y _abcm')]//button[contains(@class,'_abl-')]")\
             .click()
         return names
-
 
 my_bot = InstaBot(username, pw)
 my_bot.get_unfollowers()
