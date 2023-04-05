@@ -1,13 +1,15 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys #For 2FA
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.keys import Keys  #For 2FA
 from selenium.webdriver.common.by import By
 from time import sleep
-from secrets import pw
-from secrets import username
+from secrets_1 import pw
+from secrets_1 import username
+
 
 class InstaBot:
     def __init__(self, username, pw):
-        self.driver = webdriver.Chrome(executable_path='D:/PC/Downloads/chromedriver_win32/chromedriver.exe')
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
         self.driver.maximize_window()
         self.username = username
         self.driver.get("https://instagram.com")
@@ -22,9 +24,9 @@ class InstaBot:
         self.driver.find_element(By.XPATH, "//button[contains(text(), 'Confirm')]")\
             .send_keys(Keys.ENTER)
         sleep(6)
-        self.driver.find_element(By.XPATH, "//button[contains(text(), 'Not Now')]")\
+        self.driver.find_element(By.XPATH, "//button[contains(text(), 'Save Info')]")\
             .click()
-        sleep(2)
+        sleep(4)
         self.driver.find_element(By.XPATH, "//button[contains(text(), 'Not Now')]")\
             .click()
         sleep(2)
@@ -49,8 +51,8 @@ class InstaBot:
     def _get_names_following(self):
         sleep(2)
         # scroll
-        scroll_box = self.driver.find_element(By.XPATH, 
-            "//div[contains(@class,'_aano')]")
+        scroll_box = self.driver.find_element(
+            By.XPATH, "//div[contains(@class,'_aano')]")
         last_ht, ht = 0, 1
         while last_ht != ht:
             last_ht = ht
@@ -63,15 +65,16 @@ class InstaBot:
         links = scroll_box.find_elements(By.TAG_NAME, 'a')
         names = [name.text for name in links if name.text != '']
         # close button
-        self.driver.find_element(By.XPATH, "//div[contains(@class,'_ab8w  _ab94 _ab99 _ab9f _ab9m _ab9p  _ab9y _abcm')]//button[contains(@class,'_abl-')]")\
+        # Update once in a while
+        self.driver.find_element(By.XPATH, "//div[contains(@class,'x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh x1sxyh0 xurb0ha x1n2onr6 x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1')]//button[contains(@class,'_abl-')]")\
             .click()
         return names
 
     def _get_names_followers(self):
         sleep(2)
         # scroll
-        scroll_box = self.driver.find_element(By.XPATH, 
-            "//div[contains(@class,'_aano')]")
+        scroll_box = self.driver.find_element(
+            By.XPATH, "//div[contains(@class,'_aano')]")
         last_ht, ht = 0, 1
         while last_ht != ht:
             last_ht = ht
@@ -84,9 +87,11 @@ class InstaBot:
         links = scroll_box.find_elements(By.TAG_NAME, 'a')
         names = [name.text for name in links if name.text != '']
         # close button
-        self.driver.find_element(By.XPATH, "//div[contains(@class,'_ab8w  _ab94 _ab99 _ab9f _ab9m _ab9p  _ab9y _abcm')]//button[contains(@class,'_abl-')]")\
+        # Update once in a while
+        self.driver.find_element(By.XPATH, "//div[contains(@class,'x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh x1sxyh0 xurb0ha x1n2onr6 x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1')]//button[contains(@class,'_abl-')]")\
             .click()
         return names
+
 
 my_bot = InstaBot(username, pw)
 my_bot.get_unfollowers()
