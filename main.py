@@ -1,5 +1,6 @@
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.keys import Keys  # For 2FA
 from selenium.webdriver.common.by import By
 from time import sleep
@@ -8,7 +9,7 @@ from secrets_1 import pw, username
 
 class InstaBot:
     def __init__(self, username, pw):
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
         self.driver.maximize_window()
         self.username = username
         self.driver.get("https://instagram.com")
