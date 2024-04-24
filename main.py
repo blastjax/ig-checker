@@ -25,7 +25,7 @@ class InstaBot:
         ).send_keys(Keys.ENTER)
         sleep(6)
         self.driver.find_element(
-            By.XPATH, "//button[contains(text(), 'Save Info')]"
+            By.XPATH, "//button[contains(@class,' _acan _acap _acas _aj1- _ap30')]"
         ).click()
         sleep(4)
         self.driver.find_element(
