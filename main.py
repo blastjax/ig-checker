@@ -9,7 +9,14 @@ from secrets_1 import pw, username
 
 class InstaBot:
     def __init__(self, username, pw):
-        self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+        # If server is down
+        chrome_driver_path = "./chromedriver.exe"
+        self.service = Service(chrome_driver_path)
+        self.driver = webdriver.Chrome(service=self.service)
+
+        # If server isn't down
+        # self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+
         self.driver.maximize_window()
         self.username = username
         self.driver.get("https://instagram.com")
@@ -20,10 +27,10 @@ class InstaBot:
         self.driver.find_element(By.XPATH, '//input[@name="password"]').send_keys(pw)
         self.driver.find_element(By.XPATH, '//button[@type="submit"]').click()
         sleep(10)
-        self.driver.find_element(
-            By.XPATH, "//button[contains(text(), 'Confirm')]"
-        ).send_keys(Keys.ENTER)
-        sleep(6)
+        # self.driver.find_element(
+        #     By.XPATH, "//button[contains(text(), 'Confirm')]"
+        # ).send_keys(Keys.ENTER)
+        # sleep(6)
         self.driver.find_element(
             By.XPATH, "//button[contains(@class,' _acan _acap _acas _aj1- _ap30')]"
         ).click()
@@ -48,15 +55,16 @@ class InstaBot:
             print(profiles)
 
     def _get_names_following(self):
-        sleep(2)
+        sleep(3)
         # scroll
         scroll_box = self.driver.find_element(
-            By.XPATH, "//div[contains(@class,'_aano')]"
+            By.XPATH,
+            "//div[contains(@class,'xyi19xy x1ccrb07 xtf3nb5 x1pc53ja x1lliihq x1iyjqo2 xs83m0k xz65tgg x1rife3k x1n2onr6')]",
         )
         last_ht, ht = 0, 1
         while last_ht != ht:
             last_ht = ht
-            sleep(1)
+            sleep(2)
             ht = self.driver.execute_script(
                 """
                 arguments[0].scrollTo(0, arguments[0].scrollHeight); 
@@ -75,15 +83,16 @@ class InstaBot:
         return names
 
     def _get_names_followers(self):
-        sleep(2)
+        sleep(3)
         # scroll
         scroll_box = self.driver.find_element(
-            By.XPATH, "//div[contains(@class,'_aano')]"
+            By.XPATH,
+            "//div[contains(@class,'xyi19xy x1ccrb07 xtf3nb5 x1pc53ja x1lliihq x1iyjqo2 xs83m0k xz65tgg x1rife3k x1n2onr6')]",
         )
         last_ht, ht = 0, 1
         while last_ht != ht:
             last_ht = ht
-            sleep(1)
+            sleep(2)
             ht = self.driver.execute_script(
                 """
                 arguments[0].scrollTo(0, arguments[0].scrollHeight); 
