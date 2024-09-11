@@ -20,6 +20,9 @@ class InstaBot:
         self.driver.maximize_window()
         self.username = username
         self.driver.get("https://instagram.com")
+        self.login(username, pw)
+
+    def login(self, username, pw):
         sleep(2)
         self.driver.find_element(By.XPATH, '//input[@name="username"]').send_keys(
             username
@@ -27,62 +30,43 @@ class InstaBot:
         self.driver.find_element(By.XPATH, '//input[@name="password"]').send_keys(pw)
         self.driver.find_element(By.XPATH, '//button[@type="submit"]').click()
         sleep(10)
+        self.dismiss_popups()
+
+        # If you have 2FA
         # self.driver.find_element(
         #     By.XPATH, "//button[contains(text(), 'Confirm')]"
         # ).send_keys(Keys.ENTER)
         # sleep(6)
-        self.driver.find_element(
-            By.XPATH, "//button[contains(@class,' _acan _acap _acas _aj1- _ap30')]"
-        ).click()
-        sleep(4)
-        self.driver.find_element(
-            By.XPATH, "//button[contains(text(), 'Not Now')]"
-        ).click()
-        sleep(2)
+
+    def dismiss_popups(self):
+        try:
+            self.driver.find_element(
+                By.XPATH, "//button[contains(@class,' _acan _acap _acas _aj1- _ap30')]"
+            ).click()
+            sleep(2)
+            self.driver.find_element(
+                By.XPATH, "//button[contains(text(), 'Not Now')]"
+            ).click()
+            sleep(2)
+        except Exception as e:
+            print(e)
 
     def get_unfollowers(self):
         self.driver.find_element(
             By.XPATH, "//a[contains(@href,'/{}')]".format(self.username)
         ).click()
         sleep(5)
-        self.driver.find_element(By.XPATH, "//a[contains(@href,'/following')]").click()
-        following = self._get_names_following()
-        self.driver.find_element(By.XPATH, "//a[contains(@href,'/followers')]").click()
-        followers = self._get_names_followers()
+        following = self._get_names("following")
+        followers = self._get_names("followers")
         not_following_back = [user for user in following if user not in followers]
         for x in not_following_back:
-            profiles = "https://instagram.com/" + x
-            print(profiles)
+            print(f"https://instagram.com/{x}")
 
-    def _get_names_following(self):
+    def _get_names(self, relation_type):
         sleep(3)
-        # scroll
-        scroll_box = self.driver.find_element(
-            By.XPATH,
-            "//div[contains(@class,'xyi19xy x1ccrb07 xtf3nb5 x1pc53ja x1lliihq x1iyjqo2 xs83m0k xz65tgg x1rife3k x1n2onr6')]",
-        )
-        last_ht, ht = 0, 1
-        while last_ht != ht:
-            last_ht = ht
-            sleep(2)
-            ht = self.driver.execute_script(
-                """
-                arguments[0].scrollTo(0, arguments[0].scrollHeight); 
-                return arguments[0].scrollHeight;
-                """,
-                scroll_box,
-            )
-        links = scroll_box.find_elements(By.TAG_NAME, "a")
-        names = [name.text for name in links if name.text != ""]
-        # close button
-        # Update once in a while
         self.driver.find_element(
-            By.XPATH,
-            "//div[contains(@class,'x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh x1sxyh0 xurb0ha x1n2onr6 x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1')]//button[contains(@class,'_abl-')]",
+            By.XPATH, f"//a[contains(@href,'/{relation_type}')]"
         ).click()
-        return names
-
-    def _get_names_followers(self):
         sleep(3)
         # scroll
         scroll_box = self.driver.find_element(
@@ -92,7 +76,7 @@ class InstaBot:
         last_ht, ht = 0, 1
         while last_ht != ht:
             last_ht = ht
-            sleep(2)
+            sleep(3)
             ht = self.driver.execute_script(
                 """
                 arguments[0].scrollTo(0, arguments[0].scrollHeight); 
@@ -100,8 +84,11 @@ class InstaBot:
                 """,
                 scroll_box,
             )
-        links = scroll_box.find_elements(By.TAG_NAME, "a")
-        names = [name.text for name in links if name.text != ""]
+        names = [
+            link.text
+            for link in scroll_box.find_elements(By.TAG_NAME, "a")
+            if link.text
+        ]
         # close button
         # Update once in a while
         self.driver.find_element(
